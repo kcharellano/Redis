@@ -11,8 +11,10 @@ public class Main {
 		try {
 			serverSocket = new ServerSocket(port);
 			serverSocket.setReuseAddress(true);
-			clientSocket = serverSocket.accept();
-			System.out.println("client socket = " + clientSocket.getPort() + " connected!");
+			while (true) {
+				Thread thread = new Thread(new ClientHandler(serverSocket.accept()));
+				thread.start();
+			}
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		} finally {
