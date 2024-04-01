@@ -30,7 +30,7 @@ test_ping() {
 
 test_multi_ping() {
   # Use redis-cli to test the connection
-  if echo "ping\nping" | redis-cli; then
+  if echo "ping\nping" | redis-cli > /dev/null; then
       echo "[TEST 3 PASSED] Multi Ping test passed"
   else
       echo "Error: Ping test failed"
@@ -43,11 +43,42 @@ test_concurrent_clients() {
   echo "[TEST 4 PASSED] Concurrent clients test passed"
 }
 
+test_echo_command() {
+  if echo "echo hello" | redis-cli | grep -q "hello"; then
+      echo "[TEST 5 PASSED] Echo command test passed"
+  else
+      echo "Error: Echo command test failed"
+      exit 1
+  fi
+}
 
+test_set_command() {
+  if echo "set mykey hello" | redis-cli | grep -q "OK"; then
+      echo "[TEST 6 PASSED] Set command test passed"
+  else
+      echo "Error: Set command test failed"
+      exit 1
+  fi
+}
+
+test_get_command() {
+  if echo "get mykey" | redis-cli | grep -q "hello"; then
+      echo "[TEST 7 PASSED] Get command test passed"
+  else
+      echo "Error: Get command test failed"
+      exit 1
+  fi
+}
+
+# Run the tests
 test_connection
 test_ping
 test_multi_ping
 test_concurrent_clients
+test_echo_command
+test_set_command
+test_get_command
+
 
 
 
